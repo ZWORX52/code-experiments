@@ -10,7 +10,7 @@ commit () {
 }
 
 $HOME/code/rezip
-git add .
+git add $HOME/code/
 commit
 git push -u origin master
 echo Updating done!
