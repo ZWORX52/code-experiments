@@ -9,7 +9,7 @@ commit () {
 	set +o noclobber
 }
 
-./rezip
+$HOME/code/rezip
 git add .
 commit
 git push -u origin master
