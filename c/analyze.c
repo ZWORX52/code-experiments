@@ -130,7 +130,7 @@ void analyze_board(int id) {
 	// find move with most words after
 	for (int i = 0; i < BOARD_SIZE; i++) {
 		// brute-forcing index
-		for (int j = 0; j < BOARD_SIZE; j++)
+		for (int j = 1; j < BOARD_SIZE + 1; j++)
 		{
 			// brute-forcing amount
 			printf("testing move %c %i %i\n", 'r', i, j);
