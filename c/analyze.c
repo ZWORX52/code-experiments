@@ -8,7 +8,7 @@
 char tmp_board[BOARD_SIZE][BOARD_SIZE + 1] = { 0 };
 
 // TODO: make check for words function
-int words_on_board() {
+int get_words_on_board() {
 	// Counts the number of words on the board using
 	// the isword function and the tmp_board variable
 	
@@ -135,7 +135,7 @@ void analyze_board(int id) {
 			// brute-forcing amount
 			printf("testing move %c %i %i\n", 'r', i, j);
 			rotate(true, i, j);
-			int num_words = words_on_board();
+			int num_words = get_words_on_board();
 			printf("there are %i words after this move\n", num_words);
 			if (num_words) {
 				for (int k = 0; k < BOARD_SIZE; k++)
@@ -147,7 +147,7 @@ void analyze_board(int id) {
 
 			printf("testing move %c %i %i\n", 'c', i, j);
 			rotate(true, i, j);
-			num_words = words_on_board();
+			num_words = get_words_on_board();
 			printf("there are %i words after this move\n", num_words);
 			if (num_words) {
 				for (int k = 0; k < BOARD_SIZE; k++)
