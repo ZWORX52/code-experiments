@@ -135,9 +135,9 @@ void analyze_board(int id) {
 			// brute-forcing amount
 			printf("testing move %c %i %i\n", 'r', i, j);
 			rotate(true, i, j);
-			int words = words_on_board();
-			printf("there are %i words after this move\n", words);
-			if (words) {
+			int num_words = words_on_board();
+			printf("there are %i words after this move\n", num_words);
+			if (num_words) {
 				for (int k = 0; k < BOARD_SIZE; k++)
 				{
 					printf("%s\n", tmp_board[k]);
@@ -147,9 +147,9 @@ void analyze_board(int id) {
 
 			printf("testing move %c %i %i\n", 'c', i, j);
 			rotate(true, i, j);
-			int words = words_on_board();
-			printf("there are %i words after this move\n", words);
-			if (words) {
+			num_words = words_on_board();
+			printf("there are %i words after this move\n", num_words);
+			if (num_words) {
 				for (int k = 0; k < BOARD_SIZE; k++)
 				{
 					printf("%s\n", tmp_board[k]);
