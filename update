@@ -11,7 +11,7 @@ commit () {
 	set +o noclobber
 }
 
-./rezip.sh
+./rezip
 git add .
 commit
 git push -u origin master
