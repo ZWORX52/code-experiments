@@ -7,6 +7,14 @@
 
 char tmp_board[BOARD_SIZE][BOARD_SIZE + 1] = { 0 };
 
+struct move
+{
+	bool rot_row;
+	int idx;
+	int amnt;
+};
+
+
 // TODO: make check for words function
 int get_words_on_board() {
 	// Counts the number of words on the board using
@@ -34,7 +42,7 @@ int get_words_on_board() {
 	return count;
 }
 
-void rotate(bool rot_row, int idx, int amnt) {
+void rotate(struct move this_move) {
 	printf("-----\n");
 	// Rotates "tmp" board based on specs
 	int amnt_abs = abs(amnt);
@@ -92,8 +100,9 @@ void rotate(bool rot_row, int idx, int amnt) {
 			tmp_board[i][idx] = this_row[i];
 }
 
-void unrotate(bool rot_row, int idx, int amnt) {
-	rotate(rot_row, idx, -amnt);
+void unrotate(struct move this_move) {
+	this_move.amnt = -this_move.amnt;
+	rotate(this_move);
 }
 
 void analyze_board(int id) {
@@ -133,8 +142,12 @@ void analyze_board(int id) {
 		for (int j = 1; j < BOARD_SIZE + 1; j++)
 		{
 			// brute-forcing amount
+			struct move this_move;
+			this_move.rot_row = true;
+			this_move.idx = i;
+			this_move.amnt = j;
 			printf("testing move %c %i %i\n", 'r', i, j);
-			rotate(true, i, j);
+			rotate(this_move);
 			int num_words = get_words_on_board();
 			printf("there are %i words after this move\n", num_words);
 			if (num_words) {
@@ -143,10 +156,11 @@ void analyze_board(int id) {
 					printf("%s\n", tmp_board[k]);
 				}
 			}
-			unrotate(true, i, j);
+			unrotate(this_move);
 
+			this_move.rot_row = false;
 			printf("testing move %c %i %i\n", 'c', i, j);
-			rotate(true, i, j);
+			rotate(this_move);
 			num_words = get_words_on_board();
 			printf("there are %i words after this move\n", num_words);
 			if (num_words) {
@@ -155,7 +169,7 @@ void analyze_board(int id) {
 					printf("%s\n", tmp_board[k]);
 				}
 			}
-			unrotate(true, i, j);
+			unrotate(this_move);
 		}
 	}
 }
