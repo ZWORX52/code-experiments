@@ -45,12 +45,13 @@ int get_words_on_board() {
 void rotate(struct move this_move) {
 	printf("-----\n");
 	// Rotates "tmp" board based on specs
-	int amnt_abs = abs(amnt);
+	int amnt_abs = abs(this_move.amnt);
 	char this_row[BOARD_SIZE + 1] = { 0 };
 	char *buf = calloc(amnt_abs + 1, 1);
-	if (rot_row) {
+	if (this_move.rot_row) {
 		// We are rotating a row; simple enough.
-		memcpy(this_row, tmp_board[idx], sizeof(tmp_board[idx]));
+		memcpy(this_row, tmp_board[this_move.idx],
+			sizeof(tmp_board[this_move.idx]));
 	}
 	else {
 		// We are rotating a column. This will be harder, but I think
@@ -58,11 +59,11 @@ void rotate(struct move this_move) {
 		// the column as a row and then rotating as a row and then
 		// writing the temp row back into the column) will be sufficient.
 		for (int i = 0; i < BOARD_SIZE; i++) {
-			this_row[i] = tmp_board[i][idx];
+			this_row[i] = tmp_board[i][this_move.idx];
 		}
 	}
 
-	if (amnt < 0) {
+	if (this_move.amnt < 0) {
 		// We are rotating to the left (ABCDE rot -1 = BCDEA)
 		memcpy(buf, this_row, amnt_abs);
 		printf("%s\n", buf);
@@ -79,25 +80,25 @@ void rotate(struct move this_move) {
 		// We are rotating to the right (ABCDE rot 1 = EABCD)
 		// memcpy(buf, &tmp_board[5 - amnt][idx], amnt); Faulty
 		// memcpy, should use this_row instead
-		memcpy(buf, &this_row[5 - amnt], amnt);
+		memcpy(buf, &this_row[5 - this_move.amnt], this_move.amnt);
 		printf("%s\n", buf);
-		for (int i = BOARD_SIZE - 1; i >= amnt; i--) {
+		for (int i = BOARD_SIZE - 1; i >= this_move.amnt; i--) {
 			// printf("%s\n", this_row);
-			this_row[i] = this_row[i - amnt];
+			this_row[i] = this_row[i - this_move.amnt];
 
 		}
-		memcpy(&this_row[0], buf, amnt);
+		memcpy(&this_row[0], buf, this_move.amnt);
 		printf("%s %s\n", buf, this_row);
 	}
 	
 	free(buf);
 	printf("-----\n");
 
-	if (rot_row)
-		memcpy(tmp_board[idx], this_row, BOARD_SIZE + 1);
+	if (this_move.rot_row)
+		memcpy(tmp_board[this_move.idx], this_row, BOARD_SIZE + 1);
 	else
 		for (int i = 0; i < BOARD_SIZE; i++)
-			tmp_board[i][idx] = this_row[i];
+			tmp_board[i][this_move.idx] = this_row[i];
 }
 
 void unrotate(struct move this_move) {
@@ -182,4 +183,3 @@ void analyze(char *file) {
 		analyze_board(i);
 	}
 }
-
