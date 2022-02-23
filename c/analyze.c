@@ -5,6 +5,8 @@
 
 #include "analyze.h"
 
+#define NUM_MOVES 20
+
 char tmp_board[BOARD_SIZE][BOARD_SIZE + 1] = { 0 };
 
 struct move
@@ -14,6 +16,7 @@ struct move
 	int amnt;
 };
 
+struct move this_sequence[NUM_MOVES];
 
 // TODO: make check for words function
 int get_words_on_board() {
@@ -106,7 +109,7 @@ void unrotate(struct move this_move) {
 	rotate(this_move);
 }
 
-void analyze_board(int id) {
+void analyze_board(int id, int movenum) {
 	// request rotation (debugging)
 	memcpy(tmp_board, boards[id], sizeof(boards[id]));
 
@@ -147,28 +150,36 @@ void analyze_board(int id) {
 			this_move.rot_row = true;
 			this_move.idx = i;
 			this_move.amnt = j;
-			printf("testing move %c %i %i\n", 'r', i, j);
 			rotate(this_move);
 			int num_words = get_words_on_board();
+#ifdef DEBUG
+			printf("testing move %c %i %i\n", 'r', i, j);
 			printf("there are %i words after this move\n", num_words);
+#endif
 			if (num_words) {
+#ifdef DEBUG
 				for (int k = 0; k < BOARD_SIZE; k++)
 				{
 					printf("%s\n", tmp_board[k]);
 				}
+#endif
 			}
 			unrotate(this_move);
 
 			this_move.rot_row = false;
-			printf("testing move %c %i %i\n", 'c', i, j);
 			rotate(this_move);
 			num_words = get_words_on_board();
+#ifdef DEBUG
+			printf("testing move %c %i %i\n", 'c', i, j);
 			printf("there are %i words after this move\n", num_words);
+#endif
 			if (num_words) {
+#ifdef DEBUG
 				for (int k = 0; k < BOARD_SIZE; k++)
 				{
 					printf("%s\n", tmp_board[k]);
 				}
+#endif
 			}
 			unrotate(this_move);
 		}
@@ -180,6 +191,6 @@ void analyze(char *file) {
 	printf("%s\n", file);
 	for (int i = 0; i < BOARDS; i++) {
 		printf("analyzing board #%i\n", i);
-		analyze_board(i);
+		analyze_board(i, 0);
 	}
 }
