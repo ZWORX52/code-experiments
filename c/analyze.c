@@ -153,18 +153,17 @@ void analyze_board(int id, int movenum) {
 			this_move.amnt = j;
 			rotate(this_move);
 			int num_words = get_words_on_board();
+			// check if this move is worth pursuing
 #ifdef DEBUG
 			printf("testing move %c %i %i\n", 'r', i, j);
 			printf("there are %i words after this move\n", num_words);
-#endif
 			if (num_words) {
-#ifdef DEBUG
 				for (int k = 0; k < BOARD_SIZE; k++)
 				{
 					printf("%s\n", tmp_board[k]);
 				}
-#endif
 			}
+#endif
 			unrotate(this_move);
 
 			this_move.rot_row = false;
