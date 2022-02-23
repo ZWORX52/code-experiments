@@ -16,7 +16,8 @@ struct move
 	int amnt;
 };
 
-struct move this_sequence[NUM_MOVES];
+struct move current_max_score[NUM_MOVES];
+// Tracks the current max score for all of the depths
 
 // TODO: make check for words function
 int get_words_on_board() {
