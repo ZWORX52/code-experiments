@@ -210,6 +210,7 @@ void analyze_board(int id, int movenum, int pathtotal, int penaltyleft) {
 				}
 			}
 #endif
+			// Code for rotating columns
 			unrotate(this_move);
 
 			this_move.rot_row = false;
