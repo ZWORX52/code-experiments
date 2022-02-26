@@ -36,7 +36,10 @@ int get_words_on_board() {
 	int count = 0;
 	// Check rows
 	for (int i = 0; i < BOARD_SIZE; i++) {
-		count += isword(tmp_board[i]);
+		bool thereisword = isword(tmp_board[i]);
+		if (thereisword)
+			printf("found word: %s\n");
+		count += (int) thereisword;
 	}
 
 	char *tmpbuf = calloc(BOARD_SIZE + 1, 1);
@@ -50,13 +53,15 @@ int get_words_on_board() {
 		if (thereisword) {
 			printf("found word: %s\n", tmpbuf);
 		}
-		count += thereisword;
+		count += (int) thereisword;
 	}
 	return count;
 }
 
 void rotate(struct move this_move) {
+#ifdef DEBUG
 	printf("-----\n");
+#endif
 	// Rotates "tmp" board based on specs
 	int amnt_abs = abs(this_move.amnt);
 	char this_row[BOARD_SIZE + 1] = { 0 };
@@ -79,7 +84,9 @@ void rotate(struct move this_move) {
 	if (this_move.amnt < 0) {
 		// We are rotating to the left (ABCDE rot -1 = BCDEA)
 		memcpy(buf, this_row, amnt_abs);
+#ifdef DEBUG
 		printf("%s\n", buf);
+#endif
 		int i = 0;
 		for (; i < BOARD_SIZE - amnt_abs + 1; i++) {
 			// copy every element amnt_abs to the left
@@ -87,25 +94,33 @@ void rotate(struct move this_move) {
 			this_row[i] = this_row[i + amnt_abs];
 		}
 		memcpy(&this_row[i - 1], buf, amnt_abs);
+#ifdef DEBUG
 		printf("%i %s %s\n", i, buf, this_row);
+#endif
 	}
 	else {
 		// We are rotating to the right (ABCDE rot 1 = EABCD)
 		// memcpy(buf, &tmp_board[5 - amnt][idx], amnt); Faulty
 		// memcpy, should use this_row instead
 		memcpy(buf, &this_row[5 - this_move.amnt], this_move.amnt);
+#ifdef DEBUG
 		printf("%s\n", buf);
+#endif
 		for (int i = BOARD_SIZE - 1; i >= this_move.amnt; i--) {
 			// printf("%s\n", this_row);
 			this_row[i] = this_row[i - this_move.amnt];
 
 		}
 		memcpy(&this_row[0], buf, this_move.amnt);
+#ifdef DEBUG
 		printf("%s %s\n", buf, this_row);
+#endif
 	}
 	
 	free(buf);
+#ifdef DEBUG
 	printf("-----\n");
+#endif
 
 	if (this_move.rot_row)
 		memcpy(tmp_board[this_move.idx], this_row, BOARD_SIZE + 1);
@@ -171,11 +186,17 @@ void analyze_board(int id, int movenum, int pathtotal, int penaltyleft) {
 			// the current depth's total
 			if ((pathtotal + num_words) > current_max_score[movenum]) {
 				current_max_score[movenum] = pathtotal + num_words;
+				for (int k = 0; k < BOARD_SIZE; k++) {
+					printf("%s\n", tmp_board[k]);
+				}
 				analyze_board(id, movenum + 1, pathtotal + num_words, penaltyleft);
 			}
 			else {
 				if (penaltyleft == 1) {
 					return;
+				}
+				for (int k = 0; k < BOARD_SIZE; k++) {
+					printf("%s\n", tmp_board[k]);
 				}
 				analyze_board(id, movenum + 1, pathtotal + num_words, penaltyleft - 1);
 			}
