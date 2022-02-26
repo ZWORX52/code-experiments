@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #ifndef ANALYZE_H_INCLUDED
 #define ANALYZE_H_INCLUDED
 
@@ -7,7 +9,7 @@
 #define BOARD_SIZE 5
 #define NUM_BUCKETS 3001
 
-void analyze_board(int id);
+void analyze_board(int id, int movenum, int pathtotal, int penaltyleft);
 void analyze(char *file);
 
 bool isword(char *str);
