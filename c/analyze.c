@@ -210,9 +210,9 @@ void analyze_board(int id, int movenum, int pathtotal, int penaltyleft) {
 				}
 			}
 #endif
-			// Code for rotating columns
 			unrotate(this_move);
 
+			// Code for rotating columns
 			this_move.rot_row = false;
 			rotate(this_move);
 			num_words = get_words_on_board();
