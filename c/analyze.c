@@ -150,6 +150,9 @@ void analyze_board(int id, int movenum, int pathtotal, int penaltyleft) {
 		printf("%s\n", tmp_board[i]);
 	}
 #endif
+	if (movenum >= NUM_MOVES) {
+		return;
+	}
 	// find move with most words after
 	for (int i = 0; i < BOARD_SIZE; i++) {
 		// brute-forcing index
