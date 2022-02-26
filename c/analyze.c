@@ -16,7 +16,7 @@ struct move
 	int amnt;
 };
 
-struct move current_max_score[NUM_MOVES];
+int current_max_score[NUM_MOVES];
 // Tracks the current max score for all of the depths
 
 // TODO: make check for words function
@@ -110,7 +110,7 @@ void unrotate(struct move this_move) {
 	rotate(this_move);
 }
 
-void analyze_board(int id, int movenum) {
+void analyze_board(int id, int movenum, int pathtotal) {
 	// request rotation (debugging)
 	memcpy(tmp_board, boards[id], sizeof(boards[id]));
 
@@ -153,7 +153,12 @@ void analyze_board(int id, int movenum) {
 			this_move.amnt = j;
 			rotate(this_move);
 			int num_words = get_words_on_board();
-			// check if this move is worth pursuing
+			// check if this move is worth pursuing,
+			// i.e. if doing this move will result
+			// in a total that's more than
+			// the current depth's total
+			if ((pathtotal + num_words) > current_max_score[movenum]) {
+			}
 #ifdef DEBUG
 			printf("testing move %c %i %i\n", 'r', i, j);
 			printf("there are %i words after this move\n", num_words);
@@ -172,15 +177,13 @@ void analyze_board(int id, int movenum) {
 #ifdef DEBUG
 			printf("testing move %c %i %i\n", 'c', i, j);
 			printf("there are %i words after this move\n", num_words);
-#endif
 			if (num_words) {
-#ifdef DEBUG
 				for (int k = 0; k < BOARD_SIZE; k++)
 				{
 					printf("%s\n", tmp_board[k]);
 				}
-#endif
 			}
+#endif
 			unrotate(this_move);
 		}
 	}
@@ -191,6 +194,6 @@ void analyze(char *file) {
 	printf("%s\n", file);
 	for (int i = 0; i < BOARDS; i++) {
 		printf("analyzing board #%i\n", i);
-		analyze_board(i, 0);
+		analyze_board(i, 0, 0);
 	}
 }
