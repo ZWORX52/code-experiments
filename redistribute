@@ -1,0 +1,5 @@
+find . -maxdepth 1 -mindepth 1\
+	-type d -a -regex '\./[^\.].*' -print |\
+	while read x;
+	do find $x -type d -exec cp ~/code/update {} \;;
+	done;
