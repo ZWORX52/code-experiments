@@ -19,7 +19,8 @@ IMGUI_DIR = /home/zworx52/imgui-1.87
 SOURCES = main.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
-OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
+OBJDIR = objdir/
+OBJS = $(addprefix $(OBJDIR), $(addsuffix .o, $(basename $(notdir $(SOURCES)))))
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
 
@@ -70,17 +71,14 @@ endif
 ## BUILD RULES
 ##---------------------------------------------------------------------
 
-%.o:%.cpp
+$(OBJDIR)%.o:%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
-	@echo $@, $<
 
-%.o:$(IMGUI_DIR)/%.cpp
+$(OBJDIR)%.o:$(IMGUI_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
-	@echo $@, $<
 
-%.o:$(IMGUI_DIR)/backends/%.cpp
+$(OBJDIR)%.o:$(IMGUI_DIR)/backends/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
-	@echo $@, $<
 
 all: imgui java
 
@@ -90,8 +88,11 @@ imgui: $(EXE)
 $(EXE): $(OBJS)
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS)
 
-clean:
+cleanf:
 	rm -f $(EXE) $(OBJS)
+
+clean:
+	rm -f $(OBJS)
 
 java:
 	@echo Will build java...
