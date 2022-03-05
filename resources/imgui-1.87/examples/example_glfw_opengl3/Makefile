@@ -15,12 +15,11 @@
 #CXX = clang++
 
 EXE = example_glfw_opengl3
-IMGUI_DIR = /home/zworx52/code/resources/imgui-1.87
+IMGUI_DIR = /home/zworx52/imgui-1.87
 SOURCES = main.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
-OBJDIR = objdir/
-OBJS = $(addprefix $(OBJDIR), $(addsuffix .o, $(basename $(notdir $(SOURCES)))))
+OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
 
@@ -71,29 +70,20 @@ endif
 ## BUILD RULES
 ##---------------------------------------------------------------------
 
-$(OBJDIR)%.o:%.cpp
+%.o:%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-$(OBJDIR)%.o:$(IMGUI_DIR)/%.cpp
+%.o:$(IMGUI_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-$(OBJDIR)%.o:$(IMGUI_DIR)/backends/%.cpp
+%.o:$(IMGUI_DIR)/backends/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-all: imgui java
-
-imgui: $(EXE)
+all: $(EXE)
 	@echo Build complete for $(ECHO_MESSAGE)
 
 $(EXE): $(OBJS)
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS)
 
-cleanf:
-	rm -f $(EXE) $(OBJS)
-
 clean:
-	rm -f $(OBJS)
-
-java:
-	@echo Will build java...
-
+	rm -f $(EXE) $(OBJS)
