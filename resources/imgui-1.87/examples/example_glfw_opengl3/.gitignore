@@ -1,0 +1,3 @@
+# No VIM tmp files
+*.swp
+
