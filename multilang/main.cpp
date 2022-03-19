@@ -9,6 +9,8 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
+#define BUFFER_SIZE 1024
+
 static void glfw_error_callback(int error, const char* description) {
 	fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
@@ -38,6 +40,7 @@ int main() {
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
 	int counter = 0;
+	char buffer[BUFFER_SIZE];
 
 	// So we can clear the screen every frame
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -62,6 +65,8 @@ int main() {
 		ImGui::Text("count = %i", counter);
 
 		ImGui::ColorEdit3("Clear color", (float *) &clear_color);
+
+		ImGui::InputText
 
 		ImGui::Text("FPS: %f", ImGui::GetIO().Framerate);
 		ImGui::End();
