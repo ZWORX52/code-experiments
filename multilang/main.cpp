@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <ctype.h>
+#include <string.h>
 
 // Yanked from examples/exmaple_glfw_opengl3/main.cpp
 #include "imgui.h"
@@ -10,6 +12,37 @@
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
 #define BUFFER_SIZE 1024
+
+char buffer[BUFFER_SIZE] = { 0 };
+char live_buffer[BUFFER_SIZE] = { 0 };
+char live_buffer2[BUFFER_SIZE] = { 0 };
+char out_buffer[BUFFER_SIZE] = { 0 };
+
+int EncryptFilter(ImGuiInputTextCallbackData* data) {
+	if ((data->EventChar > 64 && data->EventChar < 91) || (data->EventChar > 96 && data->EventChar < 123)) {
+		// In other words, [A..Z] or [a..z]. Make sure it's lowercase!
+		data->EventChar = tolower(data->EventChar);
+		return 0;
+	}
+	return 1;
+}
+
+void Encrypt(char buffer[], char out[]) {
+	// Encrypt characters in buffer to out.
+	int i = 0;
+	while (buffer[i]) {
+		// Loop ends at the end of string
+		char loopedchr = ("wordle")[i % 6] - 97;
+		out[i] = (char) ((loopedchr + buffer[i] + i - 97) % 26 + 97);
+		i++;
+	}
+}
+
+void ClearBuffer(char buffer[]) {
+	// Resets buffer to '\0' until a null byte is encountered.
+	int c = 0;
+	while (buffer[c]) buffer[c++] = '\0';
+}
 
 static void glfw_error_callback(int error, const char* description) {
 	fprintf(stderr, "GLFW Error %d: %s\n", error, description);
@@ -40,7 +73,6 @@ int main() {
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
 	int counter = 0;
-	char buffer[BUFFER_SIZE];
 
 	// So we can clear the screen every frame
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -63,10 +95,23 @@ int main() {
 		}
 		ImGui::SameLine();
 		ImGui::Text("count = %i", counter);
-
 		ImGui::ColorEdit3("Clear color", (float *) &clear_color);
 
-		ImGui::InputText
+		ImGui::Text("Input text to encrypt below...");
+		ImGui::InputText("To Encrypt", buffer, BUFFER_SIZE, ImGuiInputTextFlags_CallbackCharFilter, EncryptFilter);
+
+		if (ImGui::Button("Encrypt!")) {
+			Encrypt(buffer, out_buffer);
+		}
+		ImGui::SameLine();
+		ImGui::Text("Result: %s", out_buffer);
+
+		ImGui::Text("OR input live-encrypted text here!");
+		ImGui::InputText("Live Encryption", live_buffer, BUFFER_SIZE, ImGuiInputTextFlags_CallbackCharFilter, EncryptFilter);
+		// Re-Encrypt text entered, live!
+		ClearBuffer(live_buffer2);
+		Encrypt(live_buffer, live_buffer2);
+		ImGui::Text("Live Encryption result: %s", live_buffer2);
 
 		ImGui::Text("FPS: %f", ImGui::GetIO().Framerate);
 		ImGui::End();
