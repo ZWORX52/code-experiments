@@ -31,6 +31,7 @@ namespace Utils {
 
 namespace Origins {
 	void UpdateWindow(bool *open);
+	void UpdateLoadWindow(bool *open);
 }
 
 #endif//MAIN_H_INCLUDED
