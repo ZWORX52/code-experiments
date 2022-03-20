@@ -5,7 +5,6 @@ remount () {
 
 echo Rezipping...
 if [ ! -d "/home/zworx52/shares/Shared" ]; then remount; fi
-rm -rf files.zip
-zip -r9 files * > /dev/null
-mv -f files.zip ~/shares/Shared/
+cd ~/shares/Shared
+zip -r9f files ~/code/* > /dev/null
 

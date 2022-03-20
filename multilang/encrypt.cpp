@@ -43,7 +43,6 @@ void WordleEncryption::Decrypt(char in[], char out[]) {
 
 void WordleEncryption::UpdateWindow(bool *open) {
 	ImGuiWindowFlags flags = 0;
-	flags |= ImGuiWindowFlags_MenuBar;
 	flags |= ImGuiWindowFlags_NoCollapse;
 
 	ImGui::Begin("Encryption", open, flags);
