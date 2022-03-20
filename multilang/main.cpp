@@ -4,9 +4,6 @@ static void glfw_error_callback(int error, const char* description) {
 	fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
-// Prototypes for external windows
-void EncryptWindow(bool *open);
-
 int main() {
 	glfwSetErrorCallback(glfw_error_callback);
 	if (!glfwInit()) return 1;
@@ -82,7 +79,7 @@ int main() {
 		}
 
 		if (show_wordle_encrypt)
-			EncryptWindow(&show_wordle_encrypt);
+			WordleEncryption::UpdateWindow(&show_wordle_encrypt);
 
 		if (show_demo_window)
 			ImGui::ShowDemoWindow();

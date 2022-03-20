@@ -12,5 +12,12 @@
 
 #define BUFFER_SIZE 1024
 
+// Function prototypes
+namespace WordleEncryption {
+	int EncryptFilter(ImGuiInputTextCallbackData* data);
+	void Encrypt(char in[], char out[]);
+	void UpdateWindow(bool *open);
+}
+
 #endif//MAIN_H_INCLUDED
 
