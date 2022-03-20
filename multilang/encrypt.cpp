@@ -1,15 +1,12 @@
 #include "main.h"
 
-void ClearBuffer(char buffer[]) {
-	// Resets buffer to '\0' until a null byte is encountered.
-	int c = 0;
-	while (buffer[c]) buffer[c++] = '\0';
-}
-
 char WordleEncryptionIn[BUFFER_SIZE] = { 0 };
 char WordleEncryptionOut[BUFFER_SIZE] = { 0 };
 char WordleDecryptionIn[BUFFER_SIZE] = { 0 };
 char WordleDecryptionOut[BUFFER_SIZE] = { 0 };
+
+// bool CopyEncryptToDecrypt = false;
+// bool CopyDecryptToEncrypt = false;
 
 int WordleEncryption::EncryptFilter(ImGuiInputTextCallbackData* data) {
 	if ((data->EventChar > 64 && data->EventChar < 91) || (data->EventChar > 96 && data->EventChar < 123)) {
@@ -36,7 +33,11 @@ void WordleEncryption::Decrypt(char in[], char out[]) {
 	int i = 0;
 	while (in[i]) {
 		char loopedchr = ("wordle")[i % 6] - 97;
-		out[i] = (char) (std::abs(in[i] - loopedchr - i - 97) % 26 + 97);
+		int tmpresult = in[i] - loopedchr - i - 97;
+		while (tmpresult < 0) {
+			tmpresult += 26;
+		}
+		out[i] = (char) ((tmpresult) % 26 + 97);
 		i++;
 	}
 }
@@ -44,17 +45,33 @@ void WordleEncryption::Decrypt(char in[], char out[]) {
 void WordleEncryption::UpdateWindow(bool *open) {
 	ImGuiWindowFlags flags = 0;
 	flags |= ImGuiWindowFlags_NoCollapse;
+	flags |= ImGuiWindowFlags_MenuBar;
 
 	ImGui::Begin("Encryption", open, flags);
 
+	if (ImGui::BeginMenuBar()) {
+		if (ImGui::BeginMenu("Copy")) {
+			if (ImGui::MenuItem("Encrypted -> Decrypt")) {
+				Utils::ClearBuffer(WordleDecryptionIn);
+				strcpy(WordleDecryptionIn, WordleEncryptionOut);
+			}
+			if (ImGui::MenuItem("Decrypted -> Encrypt")) {
+				Utils::ClearBuffer(WordleEncryptionIn);
+				strcpy(WordleEncryptionIn, WordleDecryptionOut);
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+
 	// Redo
 	ImGui::InputText("Encryption input", WordleEncryptionIn, BUFFER_SIZE, ImGuiInputTextFlags_CallbackCharFilter, EncryptFilter);
-	ClearBuffer(WordleEncryptionOut);
+	Utils::ClearBuffer(WordleEncryptionOut);
 	Encrypt(WordleEncryptionIn, WordleEncryptionOut);
 	ImGui::Text("Encryption result: %s", WordleEncryptionOut);
 
 	ImGui::InputText("Decryption input", WordleDecryptionIn, BUFFER_SIZE, ImGuiInputTextFlags_CallbackCharFilter, EncryptFilter);
-	ClearBuffer(WordleDecryptionOut);
+	Utils::ClearBuffer(WordleDecryptionOut);
 	Decrypt(WordleDecryptionIn, WordleDecryptionOut);
 	ImGui::Text("Decryption result: %s", WordleDecryptionOut);
 

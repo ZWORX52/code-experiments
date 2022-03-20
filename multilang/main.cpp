@@ -14,7 +14,7 @@ int main() {
 	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 
-	GLFWwindow *window = glfwCreateWindow(1280, 720, "Testing", NULL, NULL);
+	GLFWwindow *window = glfwCreateWindow(1280, 720, "Program", NULL, NULL);
 
 	if (window == NULL) return 1;
 	

@@ -22,5 +22,9 @@ namespace WordleEncryption {
 	void UpdateWindow(bool *open);
 }
 
+namespace Utils {
+	void ClearBuffer(char buf[]);
+}
+
 #endif//MAIN_H_INCLUDED
 
