@@ -1,52 +1,11 @@
-#include <stdio.h>
-#include <ctype.h>
-#include <string.h>
-
-// Yanked from examples/exmaple_glfw_opengl3/main.cpp
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-#if defined(IMGUI_IMPL_OPENGL_ES2)
-#include <GLES2/gl2.h>
-#endif
-#include <GLFW/glfw3.h> // Will drag system OpenGL headers
-
-#define BUFFER_SIZE 1024
-
-char buffer[BUFFER_SIZE] = { 0 };
-char live_buffer[BUFFER_SIZE] = { 0 };
-char live_buffer2[BUFFER_SIZE] = { 0 };
-char out_buffer[BUFFER_SIZE] = { 0 };
-
-int EncryptFilter(ImGuiInputTextCallbackData* data) {
-	if ((data->EventChar > 64 && data->EventChar < 91) || (data->EventChar > 96 && data->EventChar < 123)) {
-		// In other words, [A..Z] or [a..z]. Make sure it's lowercase!
-		data->EventChar = tolower(data->EventChar);
-		return 0;
-	}
-	return 1;
-}
-
-void Encrypt(char buffer[], char out[]) {
-	// Encrypt characters in buffer to out.
-	int i = 0;
-	while (buffer[i]) {
-		// Loop ends at the end of string
-		char loopedchr = ("wordle")[i % 6] - 97;
-		out[i] = (char) ((loopedchr + buffer[i] + i - 97) % 26 + 97);
-		i++;
-	}
-}
-
-void ClearBuffer(char buffer[]) {
-	// Resets buffer to '\0' until a null byte is encountered.
-	int c = 0;
-	while (buffer[c]) buffer[c++] = '\0';
-}
+#include "main.h"
 
 static void glfw_error_callback(int error, const char* description) {
 	fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
+
+// Prototypes for external windows
+void EncryptWindow(bool *open);
 
 int main() {
 	glfwSetErrorCallback(glfw_error_callback);
@@ -72,10 +31,18 @@ int main() {
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
-	int counter = 0;
-
 	// So we can clear the screen every frame
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+	bool open = true;
+
+	bool show_info_window = false;
+	bool show_wordle_encrypt = false;
+	bool show_demo_window = false;
+	
+	ImGuiWindowFlags flags = 0;
+	flags |= ImGuiWindowFlags_MenuBar;
+	flags |= ImGuiWindowFlags_NoCollapse;
 
 	// Finally done with setup (I hope)
 	// Time for some real code!
@@ -87,34 +54,38 @@ int main() {
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		ImGui::Begin("Test window");
+		ImGui::Begin("Main window", &open, flags);
 
-		ImGui::Text("Totally useful text!");
-		if (ImGui::Button("CLICK?")) {
-			counter++;
+		if (ImGui::BeginMenuBar()) {
+			if (ImGui::BeginMenu("Debug")) {
+				ImGui::MenuItem("Show demo window", NULL, &show_demo_window);
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Data")) {
+				ImGui::MenuItem("Info", NULL, &show_info_window);
+				ImGui::MenuItem("Wordle encryption", NULL, &show_wordle_encrypt);
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenuBar();
 		}
-		ImGui::SameLine();
-		ImGui::Text("count = %i", counter);
-		ImGui::ColorEdit3("Clear color", (float *) &clear_color);
-
-		ImGui::Text("Input text to encrypt below...");
-		ImGui::InputText("To Encrypt", buffer, BUFFER_SIZE, ImGuiInputTextFlags_CallbackCharFilter, EncryptFilter);
-
-		if (ImGui::Button("Encrypt!")) {
-			Encrypt(buffer, out_buffer);
-		}
-		ImGui::SameLine();
-		ImGui::Text("Result: %s", out_buffer);
-
-		ImGui::Text("OR input live-encrypted text here!");
-		ImGui::InputText("Live Encryption", live_buffer, BUFFER_SIZE, ImGuiInputTextFlags_CallbackCharFilter, EncryptFilter);
-		// Re-Encrypt text entered, live!
-		ClearBuffer(live_buffer2);
-		Encrypt(live_buffer, live_buffer2);
-		ImGui::Text("Live Encryption result: %s", live_buffer2);
 
 		ImGui::Text("FPS: %f", ImGui::GetIO().Framerate);
 		ImGui::End();
+
+		if (show_info_window) {
+			ImGui::Begin("Info", &show_info_window);
+
+			ImGui::Text("My own bad encryption attempts");
+
+			ImGui::End();
+		}
+
+		if (show_wordle_encrypt)
+			EncryptWindow(&show_wordle_encrypt);
+
+		if (show_demo_window)
+			ImGui::ShowDemoWindow();
 
 		// Display frame
 		ImGui::Render();
