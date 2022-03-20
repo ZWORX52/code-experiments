@@ -18,6 +18,3 @@ imgui-1.87/backends/imgui_impl_glfw.h
 imgui-1.87/backends/imgui_impl_opengl3.cpp
 imgui-1.87/backends/imgui_impl_opengl3.h
 
-. glfw header
-glfw3.h
-
