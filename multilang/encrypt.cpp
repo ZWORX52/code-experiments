@@ -5,9 +5,6 @@ char WordleEncryptionOut[BUFFER_SIZE] = { 0 };
 char WordleDecryptionIn[BUFFER_SIZE] = { 0 };
 char WordleDecryptionOut[BUFFER_SIZE] = { 0 };
 
-// bool CopyEncryptToDecrypt = false;
-// bool CopyDecryptToEncrypt = false;
-
 int WordleEncryption::EncryptFilter(ImGuiInputTextCallbackData* data) {
 	if ((data->EventChar > 64 && data->EventChar < 91) || (data->EventChar > 96 && data->EventChar < 123)) {
 		// In other words, [A..Z] or [a..z]. Make sure it's lowercase!
@@ -43,11 +40,11 @@ void WordleEncryption::Decrypt(char in[], char out[]) {
 }
 
 void WordleEncryption::UpdateWindow(bool *open) {
-	ImGuiWindowFlags flags = 0;
-	flags |= ImGuiWindowFlags_NoCollapse;
-	flags |= ImGuiWindowFlags_MenuBar;
+	ImGuiWindowFlags WindowFlags = 0;
+	WindowFlags |= ImGuiWindowFlags_NoCollapse;
+	WindowFlags |= ImGuiWindowFlags_MenuBar;
 
-	ImGui::Begin("Encryption", open, flags);
+	ImGui::Begin("Encryption", open, WindowFlags);
 
 	if (ImGui::BeginMenuBar()) {
 		if (ImGui::BeginMenu("Copy")) {
@@ -64,7 +61,6 @@ void WordleEncryption::UpdateWindow(bool *open) {
 		ImGui::EndMenuBar();
 	}
 
-	// Redo
 	ImGui::InputText("Encryption input", WordleEncryptionIn, BUFFER_SIZE, ImGuiInputTextFlags_CallbackCharFilter, EncryptFilter);
 	Utils::ClearBuffer(WordleEncryptionOut);
 	Encrypt(WordleEncryptionIn, WordleEncryptionOut);
@@ -74,6 +70,17 @@ void WordleEncryption::UpdateWindow(bool *open) {
 	Utils::ClearBuffer(WordleDecryptionOut);
 	Decrypt(WordleDecryptionIn, WordleDecryptionOut);
 	ImGui::Text("Decryption result: %s", WordleDecryptionOut);
+
+	ImGui::End();
+}
+
+void WordleEncryption::UpdateInfoWindow(bool *open) {
+	static ImGuiWindowFlags InfoWindowFlags =
+		ImGuiWindowFlags_NoCollapse;
+
+	ImGui::Begin("Info: Wordle Encryption", open, InfoWindowFlags);
+
+	ImGui::Text("TODO");
 
 	ImGui::End();
 }

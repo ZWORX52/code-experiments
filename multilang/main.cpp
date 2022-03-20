@@ -11,8 +11,6 @@ int main() {
 	const char* glsl_version = "#version 130";
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
-	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 
 	GLFWwindow *window = glfwCreateWindow(1280, 720, "Program", NULL, NULL);
 
@@ -33,9 +31,11 @@ int main() {
 
 	bool open = true;
 
-	bool show_info_window = false;
-	bool show_wordle_encrypt = false;
 	bool show_demo_window = false;
+
+	bool show_wordle_encrypt = false;
+	bool show_wordle_encrypt_info_window = false;
+	// bool show_origins_window = false;
 	
 	ImGuiWindowFlags flags = 0;
 	flags |= ImGuiWindowFlags_MenuBar;
@@ -54,29 +54,32 @@ int main() {
 		ImGui::Begin("Main window", &open, flags);
 
 		if (ImGui::BeginMenuBar()) {
+			if (ImGui::BeginMenu("About")) {
+				if (ImGui::BeginMenu("Encryption")) {
+					ImGui::MenuItem("Wordle info", NULL, &show_wordle_encrypt_info_window);
+					ImGui::EndMenu();
+				}
+				ImGui::EndMenu();
+			}
+
 			if (ImGui::BeginMenu("Debug")) {
 				ImGui::MenuItem("Show demo window", NULL, &show_demo_window);
 				ImGui::EndMenu();
 			}
 
-			if (ImGui::BeginMenu("Data")) {
-				ImGui::MenuItem("Info", NULL, &show_info_window);
+			if (ImGui::BeginMenu("Encryption")) {
 				ImGui::MenuItem("Wordle encryption", NULL, &show_wordle_encrypt);
 				ImGui::EndMenu();
 			}
+
 			ImGui::EndMenuBar();
 		}
 
 		ImGui::Text("FPS: %f", ImGui::GetIO().Framerate);
-		ImGui::End();
-
-		if (show_info_window) {
-			ImGui::Begin("Info", &show_info_window);
-
-			ImGui::Text("My own bad encryption attempts");
-
-			ImGui::End();
+		if (ImGui::Button("Exit")) {
+			break;
 		}
+		ImGui::End();
 
 		if (show_wordle_encrypt)
 			WordleEncryption::UpdateWindow(&show_wordle_encrypt);

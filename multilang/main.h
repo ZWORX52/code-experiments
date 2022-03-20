@@ -14,16 +14,23 @@
 
 #define BUFFER_SIZE 1024
 
-// Function prototypes
+// Function prototypes & namespaces
 namespace WordleEncryption {
+	void UpdateWindow(bool *open);
+
 	int EncryptFilter(ImGuiInputTextCallbackData* data);
 	void Encrypt(char in[], char out[]);
 	void Decrypt(char in[], char out[]);
-	void UpdateWindow(bool *open);
+
+	void UpdateInfoWindow(bool *open);
 }
 
 namespace Utils {
 	void ClearBuffer(char buf[]);
+}
+
+namespace Origins {
+	void UpdateWindow(bool *open);
 }
 
 #endif//MAIN_H_INCLUDED
