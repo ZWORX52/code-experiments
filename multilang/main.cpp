@@ -35,11 +35,11 @@ int main() {
 
 	bool show_wordle_encrypt = false;
 	bool show_wordle_encrypt_info_window = false;
-	// bool show_origins_window = false;
+	bool show_origins = false;
 	
 	ImGuiWindowFlags flags = 0;
 	flags |= ImGuiWindowFlags_MenuBar;
-	flags |= ImGuiWindowFlags_NoCollapse;
+	flags |= ImGuiWindowFlags_AlwaysAutoResize;
 
 	// Finally done with setup (I hope)
 	// Time for some real code!
@@ -72,6 +72,11 @@ int main() {
 				ImGui::EndMenu();
 			}
 
+			if (ImGui::BeginMenu("Minecraft")) {
+				ImGui::MenuItem("Origins datapack generator", NULL, &show_origins);
+				ImGui::EndMenu();
+			}
+
 			ImGui::EndMenuBar();
 		}
 
@@ -86,6 +91,9 @@ int main() {
 
 		if (show_demo_window)
 			ImGui::ShowDemoWindow();
+
+		if (show_origins)
+			Origins::UpdateWindow(&show_origins);
 
 		// Display frame
 		ImGui::Render();

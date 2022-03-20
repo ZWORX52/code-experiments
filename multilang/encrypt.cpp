@@ -41,8 +41,8 @@ void WordleEncryption::Decrypt(char in[], char out[]) {
 
 void WordleEncryption::UpdateWindow(bool *open) {
 	ImGuiWindowFlags WindowFlags = 0;
-	WindowFlags |= ImGuiWindowFlags_NoCollapse;
 	WindowFlags |= ImGuiWindowFlags_MenuBar;
+	WindowFlags |= ImGuiWindowFlags_AlwaysAutoResize;
 
 	ImGui::Begin("Encryption", open, WindowFlags);
 
@@ -75,8 +75,8 @@ void WordleEncryption::UpdateWindow(bool *open) {
 }
 
 void WordleEncryption::UpdateInfoWindow(bool *open) {
-	static ImGuiWindowFlags InfoWindowFlags =
-		ImGuiWindowFlags_NoCollapse;
+	ImGuiWindowFlags InfoWindowFlags = 0;
+	InfoWindowFlags |= ImGuiWindowFlags_AlwaysAutoResize;
 
 	ImGui::Begin("Info: Wordle Encryption", open, InfoWindowFlags);
 
