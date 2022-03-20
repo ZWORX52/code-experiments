@@ -5,6 +5,8 @@
 #include <ctype.h>
 #include <string.h>
 
+#include <cmath>
+
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -16,6 +18,7 @@
 namespace WordleEncryption {
 	int EncryptFilter(ImGuiInputTextCallbackData* data);
 	void Encrypt(char in[], char out[]);
+	void Decrypt(char in[], char out[]);
 	void UpdateWindow(bool *open);
 }
 
